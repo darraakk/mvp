@@ -1,5 +1,5 @@
-import React from 'react';
-import axios from 'axios';
+import React from "react";
+import axios from "axios";
 import {
   Box,
   Grid,
@@ -8,7 +8,7 @@ import {
   Modal,
   Typography,
   TextField,
-} from '@mui/material';
+} from "@mui/material";
 
 export default function BuyBtn() {
   const [open, setOpen] = React.useState(false);
@@ -17,9 +17,7 @@ export default function BuyBtn() {
 
   return (
     <React.Fragment>
-      <Button onClick={handleOpen} variant="outlined">
-        Buy NFT
-      </Button>
+      <Button onClick={handleOpen} variant="contained" sx={{ width: 200 }}>Buy NFT</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -32,16 +30,15 @@ export default function BuyBtn() {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 800,
+            width: 1200,
             bgcolor: "background.paper",
             border: "2px solid #000",
+            borderRadius: 2,
             p: 4,
           }}
         >
           <Grid>
-            <Typography id="modal-modal-title" variant="h4" component="h2">
-              Buy NFT
-            </Typography>
+            <Typography id="modal-modal-title" variant="h4">Buy NFT</Typography>
             <Grid
               container
               justifyContent="center"
@@ -50,44 +47,68 @@ export default function BuyBtn() {
             >
               <Grid
                 container
-                item
                 display="flex"
                 justifyContent="center"
                 direction="column"
                 sx={{ px: 5 }}
                 xs={6}
               >
-                <TextField
-                  id="outlined-basic"
-                  label="Public Key"
-                  variant="outlined"
-                  sx={{margin: 1}}
-                />
-                <TextField
-                  id="outlined-basic"
-                  label="Price"
-                  variant="outlined"
-                  sx={{margin: 1}}
-                />
-                <TextField
-                  id="outlined-basic"
-                  label="Private Key"
-                  variant="outlined"
-                  sx={{margin: 1}}
-                />
-                <TextField
-                  id="outlined-basic"
-                  label="XDR"
-                  variant="outlined"
-                  sx={{margin: 1}}
-                />
-                <Stack direction="row" spacing={5} sx={{margin: 1}}>
-                  <Button variant="outlined" disabled>
-                    Place Bid
-                  </Button>
-                  <Button variant="outlined" disabled>
-                    Sell NFT
-                  </Button>
+                <Grid
+                  fullWidth
+                  sx={{ display: "flex", alignItems: "center", m: 1 }}
+                >
+                  <Grid xs={3}>
+                    <Typography variant="h6">Public Key</Typography>
+                  </Grid>
+                  <Grid xs={9}>
+                    <TextField fullWidth variant="outlined" />
+                  </Grid>
+                </Grid>
+                <Grid
+                  fullWidth
+                  sx={{ display: "flex", alignItems: "center", m: 1 }}
+                >
+                  <Grid xs={3}>
+                    <Typography variant="h6">Price</Typography>
+                  </Grid>
+                  <Grid xs={9}>
+                    <TextField fullWidth variant="outlined" />
+                  </Grid>
+                </Grid>
+                <Grid
+                  fullWidth
+                  sx={{ display: "flex", alignItems: "center", m: 1 }}
+                >
+                  <Grid xs={3}>
+                    <Typography variant="h6">Private Key</Typography>
+                  </Grid>
+                  <Grid xs={9}>
+                    <TextField fullWidth variant="outlined" />
+                  </Grid>
+                </Grid>
+                <Grid
+                  fullWidth
+                  sx={{ display: "flex", alignItems: "center", m: 1 }}
+                >
+                  <Grid xs={3}>
+                    <Typography variant="h6">XDR</Typography>
+                  </Grid>
+                  <Grid xs={9}>
+                    <TextField fullWidth variant="outlined" />
+                  </Grid>
+                </Grid>
+                <Stack
+                  direction="row"
+                  justifyContent="space-evenly"
+                  spacing={1}
+                  sx={{ margin: 1 }}
+                >
+                  <Grid item xs={6}>
+                    <Button fullWidth variant="contained">Place Bid</Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button fullWidth variant="contained">Sell NFT</Button>
+                  </Grid>
                 </Stack>
               </Grid>
               <Grid item display="flex" justifyContent="center" xs={6}>
@@ -97,13 +118,34 @@ export default function BuyBtn() {
                     height: 400,
                     bgcolor: "background.paper",
                     border: "2px solid #000",
+                    borderRadius: 2,
                     padding: 2,
                   }}
                 >
-                  <TextField fullWidth id="outlined-basic" label="" variant="outlined" sx={{margin: 1}}/>
-                  <TextField fullWidth id="outlined-basic" label="" variant="outlined" sx={{margin: 1}}/>
-                  <TextField fullWidth id="outlined-basic" label="" variant="outlined" sx={{margin: 1}}/>
-                  <TextField fullWidth id="outlined-basic" label="" variant="outlined" sx={{margin: 1}}/>
+                  <TextField
+                    fullWidth
+                    disabled
+                    variant="outlined"
+                    sx={{ margin: 1 }}
+                  />
+                  <TextField
+                    fullWidth
+                    disabled
+                    variant="outlined"
+                    sx={{ margin: 1 }}
+                  />
+                  <TextField
+                    fullWidth
+                    disabled
+                    variant="outlined"
+                    sx={{ margin: 1 }}
+                  />
+                  <TextField
+                    fullWidth
+                    disabled
+                    variant="outlined"
+                    sx={{ margin: 1 }}
+                  />
                 </Box>
               </Grid>
             </Grid>
