@@ -1,13 +1,14 @@
-import React from 'react';
+import './App.css';
 import Home from './components/Home';
 
-export default class App  extends React.Component {
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <Home />
+      </header>
+    </div>
+  );
+}
 
-    render() {
-        return (
-            <div>
-                <Home />
-            </div>
-        );
-    }
-};
+export default App;

@@ -1,23 +1,56 @@
-import React from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import {
   Box,
   Grid,
-  Button,
-  Stack,
   Modal,
-  Typography,
+  Stack,
+  Button,
+  Divider,
   TextField,
+  Typography,
 } from "@mui/material";
+import { createTrustline, buyOffer } from "./stellar";
 
-export default function BuyBtn() {
-  const [open, setOpen] = React.useState(false);
+export default function BuyBtn(wallet) {
+  // for modal
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const [buyer, setBuyer] = useState({
+    publicKey: "",
+    price: 0,
+  });
+
+  // for bid
+  const [bid, setBid] = useState();
+  const [list, setList] = useState([]);
+  const handleChange = (event) => {
+    setBid(event.target.value);
+    setBuyer({
+      ...buyer,
+      price: event.target.value,
+    });
+  };
+
+  // for buy offer
+  const handleClick = async () => {
+    setList(list.concat({ bid: bid }));
+    await createTrustline(
+      wallet?.secretKey,
+      buyer?.price
+    );
+    await buyOffer(
+      wallet?.secretKey,
+      buyer?.price
+    );
+  };
+
   return (
     <React.Fragment>
-      <Button onClick={handleOpen} variant="contained" sx={{ width: 200 }}>Buy NFT</Button>
+      <Button onClick={handleOpen} variant="contained" sx={{ width: 200 }}>
+        Buy NFT
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -30,7 +63,9 @@ export default function BuyBtn() {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 1200,
+            minWidth: 400,
+            maxWidth: 1200,
+            height: 450,
             bgcolor: "background.paper",
             border: "2px solid #000",
             borderRadius: 2,
@@ -38,29 +73,33 @@ export default function BuyBtn() {
           }}
         >
           <Grid>
-            <Typography id="modal-modal-title" variant="h4">Buy NFT</Typography>
+            <Typography id="modal-modal-title" variant="h4">
+              Buy NFT
+            </Typography>
             <Grid
               container
+              fullWidth
+              display="flex"
               justifyContent="center"
               alignItems="center"
               direction="row"
+              wrap="nowrap"
             >
               <Grid
                 container
                 display="flex"
                 justifyContent="center"
                 direction="column"
-                sx={{ px: 5 }}
-                xs={6}
+                sx={{ marginRight: 1 }}
               >
                 <Grid
                   fullWidth
                   sx={{ display: "flex", alignItems: "center", m: 1 }}
                 >
-                  <Grid xs={3}>
+                  <Grid item xs={3}>
                     <Typography variant="h6">Public Key</Typography>
                   </Grid>
-                  <Grid xs={9}>
+                  <Grid item xs={9}>
                     <TextField fullWidth variant="outlined" />
                   </Grid>
                 </Grid>
@@ -68,32 +107,47 @@ export default function BuyBtn() {
                   fullWidth
                   sx={{ display: "flex", alignItems: "center", m: 1 }}
                 >
-                  <Grid xs={3}>
+                  <Grid item xs={3}>
                     <Typography variant="h6">Price</Typography>
                   </Grid>
-                  <Grid xs={9}>
-                    <TextField fullWidth variant="outlined" />
+                  <Grid item xs={9}>
+                    <TextField
+                      fullWidth
+                      type="number"
+                      variant="outlined"
+                      onChange={handleChange}
+                      onInput={(e) =>
+                        (e.target.value = e.target.value.slice(0, 12))
+                      }
+                    />
                   </Grid>
                 </Grid>
                 <Grid
                   fullWidth
                   sx={{ display: "flex", alignItems: "center", m: 1 }}
                 >
-                  <Grid xs={3}>
+                  <Grid item xs={3}>
                     <Typography variant="h6">Private Key</Typography>
                   </Grid>
-                  <Grid xs={9}>
-                    <TextField fullWidth variant="outlined" />
+                  <Grid item xs={9}>
+                    <form>
+                      <TextField
+                        fullWidth
+                        type="password"
+                        autoComplete="none"
+                        variant="outlined"
+                      />
+                    </form>
                   </Grid>
                 </Grid>
                 <Grid
                   fullWidth
                   sx={{ display: "flex", alignItems: "center", m: 1 }}
                 >
-                  <Grid xs={3}>
+                  <Grid item xs={3}>
                     <Typography variant="h6">XDR</Typography>
                   </Grid>
-                  <Grid xs={9}>
+                  <Grid item xs={9}>
                     <TextField fullWidth variant="outlined" />
                   </Grid>
                 </Grid>
@@ -104,50 +158,57 @@ export default function BuyBtn() {
                   sx={{ margin: 1 }}
                 >
                   <Grid item xs={6}>
-                    <Button fullWidth variant="contained">Place Bid</Button>
+                    <Button fullWidth variant="contained" onClick={handleClick}>
+                      Place Bid
+                    </Button>
                   </Grid>
                   <Grid item xs={6}>
-                    <Button fullWidth variant="contained">Sell NFT</Button>
+                    <Button fullWidth variant="contained">
+                      Sell NFT
+                    </Button>
                   </Grid>
                 </Stack>
               </Grid>
-              <Grid item display="flex" justifyContent="center" xs={6}>
-                <Box
-                  sx={{
-                    width: 800,
-                    height: 400,
-                    bgcolor: "background.paper",
-                    border: "2px solid #000",
-                    borderRadius: 2,
-                    padding: 2,
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    disabled
-                    variant="outlined"
-                    sx={{ margin: 1 }}
+              {bid && (
+                <>
+                  <Divider
+                    orientation="vertical"
+                    flexItem
+                    sx={{ bgcolor: "black" }}
                   />
-                  <TextField
-                    fullWidth
-                    disabled
-                    variant="outlined"
-                    sx={{ margin: 1 }}
-                  />
-                  <TextField
-                    fullWidth
-                    disabled
-                    variant="outlined"
-                    sx={{ margin: 1 }}
-                  />
-                  <TextField
-                    fullWidth
-                    disabled
-                    variant="outlined"
-                    sx={{ margin: 1 }}
-                  />
-                </Box>
-              </Grid>
+                  <Grid
+                    container
+                    display="flex"
+                    justifyContent="center"
+                    sx={{
+                      width: 600,
+                      maxHeight: 350,
+                      overflowY: "scroll",
+                      marginLeft: 1,
+                    }}
+                  >
+                    {list.map((item) => (
+                      <Grid
+                        container
+                        fullWidth
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        direction="column"
+                        wrap="nowrap"
+                        sx={{ wordWrap: "break-word" }}
+                      >
+                        <Typography
+                          fullWidth
+                          sx={{ border: "1px solid #000", m: 1, p: 1 }}
+                        >
+                          Bid 1 Price {item.bid} User: 1
+                        </Typography>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </>
+              )}
             </Grid>
           </Grid>
         </Box>
